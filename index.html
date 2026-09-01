@@ -1,135 +1,17 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OneMind OS — Sovereign Operations for the Physical World</title>
-<meta name="description" content="OneMind OS is the open-source sovereign operations platform built on the TAK ecosystem: situational awareness, environmental sensing, AI agents, and enterprise solutions.">
-<style>
-:root{--bg:#050607;--panel:#0b0e11;--line:#1c2229;--text:#e8ecef;--dim:#8b949e;--acc:#4da3ff;--acc2:#7ee0a3}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;line-height:1.7;font-size:15px}
-.wrap{max-width:960px;margin:0 auto;padding:0 24px}
-header{border-bottom:1px solid var(--line);padding:18px 0;position:sticky;top:0;background:rgba(5,6,7,.92);backdrop-filter:blur(8px);z-index:9}
-header .wrap{display:flex;justify-content:space-between;align-items:center}
-.logo{font-weight:700;letter-spacing:.08em;font-size:14px;color:var(--text);text-decoration:none}
-.logo span{color:var(--acc)}
-nav a{color:var(--dim);text-decoration:none;margin-left:24px;font-size:13px;transition:color .2s}
-nav a:hover{color:var(--text)}
-.hero{padding:110px 0 90px;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(77,163,255,.14),transparent 70%);pointer-events:none}
-.tag{color:var(--acc);font-size:12px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:22px}
-h1{font-size:clamp(30px,5vw,52px);line-height:1.15;font-weight:800;letter-spacing:-.02em;max-width:820px;margin:0 auto 24px}
-h1 em{font-style:normal;color:var(--acc)}
-.sub{color:var(--dim);max-width:640px;margin:0 auto 40px;font-size:16px}
-.cta{display:inline-block;background:var(--acc);color:#03131f;padding:14px 34px;border-radius:6px;text-decoration:none;font-weight:700;font-size:14px;letter-spacing:.03em;transition:transform .15s,box-shadow .2s}
-.cta:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(77,163,255,.35)}
-.cta.ghost{background:transparent;color:var(--text);border:1px solid var(--line);margin-left:12px}
-.cta.ghost:hover{border-color:var(--acc);box-shadow:none}
-section{padding:72px 0;border-top:1px solid var(--line)}
-.kicker{color:var(--acc);font-size:11px;letter-spacing:.22em;text-transform:uppercase;margin-bottom:14px}
-h2{font-size:clamp(22px,3vw,32px);letter-spacing:-.01em;margin-bottom:16px;font-weight:700}
-.lead{color:var(--dim);max-width:680px;margin-bottom:44px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:26px;transition:border-color .2s}
-.card:hover{border-color:var(--acc)}
-.card h3{font-size:15px;margin-bottom:10px;color:var(--text)}
-.card p{color:var(--dim);font-size:13.5px}
-.card .n{color:var(--acc);font-size:11px;letter-spacing:.15em;display:block;margin-bottom:8px}
-.loop{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-top:36px}
-.step{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;text-align:center}
-.step b{color:var(--acc);display:block;font-size:13px;margin-bottom:6px}
-.step span{color:var(--dim);font-size:12.5px}
-table{width:100%;border-collapse:collapse;font-size:13.5px}
-th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line)}
-th{color:var(--dim);font-weight:600;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
-td{color:var(--text)}
-td:first-child{color:var(--acc2);font-weight:600}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:40px}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px;text-align:center}
-.stat b{font-size:26px;color:var(--text);display:block;letter-spacing:-.02em}
-.stat span{color:var(--dim);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase}
-footer{padding:48px 0 60px;border-top:1px solid var(--line);color:var(--dim);font-size:12.5px}
-footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
-a.link{color:var(--acc);text-decoration:none}
-a.link:hover{text-decoration:underline}
-@media(max-width:640px){.cta.ghost{margin:12px 0 0}}
-</style>
-</head>
-<body>
-<header><div class="wrap">
-<a class="logo" href="/">ONEMIND<span>OS</span></a>
-<nav>
-<a href="#platform">Platform</a>
-<a href="#loop">How It Works</a>
-<a href="#education">Education</a>
-<a href="#enterprise">Enterprise</a>
-</nav>
-</div></header>
-
-<div class="hero"><div class="wrap">
-<div class="tag">// Sovereign Operations</div>
-<h1>Situational awareness for <em>everything</em> you operate.</h1>
-<p class="sub">OneMind OS is an open-source operations platform built on the TAK ecosystem — fusing sensors, drones, robotics, environmental data, and AI agents into one live picture. Your land, your crew, your machines. Your metal.</p>
-<a class="cta" href="#education">Start Learning</a><a class="cta ghost" href="#platform">Read the Docs</a>
-</div></div>
-
-<section id="platform"><div class="wrap">
-<div class="kicker">01 // Platform</div>
-<h2>One fabric. Every sense.</h2>
-<p class="lead">TAK is the battle-tested situational awareness chassis used across allied forces. OneMind extends it into civilian operations — homesteads, farms, work sites, SAR teams — with the layers it never had.</p>
-<div class="grid">
-<div class="card"><span class="n">SENSE</span><h3>Environmental Sensing</h3><p>Soil, air, water, microclimate, and camera feeds on a live map. Know the state of your ground without walking it.</p></div>
-<div class="card"><span class="n">SENSE</span><h3>Physiological Monitoring</h3><p>Wearables stream operator status — heart rate, exertion, heat stress — so the team lead sees when a person is cooking, not just where they are.</p></div>
-<div class="card"><span class="n">FUSE</span><h3>NATS Message Bus</h3><p>Every device, agent, and human publishes to one nervous system. JetStream persistence, 10-year event memory in ClickHouse.</p></div>
-<div class="card"><span class="n">DECIDE</span><h3>AI Agents</h3><p>Autonomous agents watch the bus, correlate events, and raise decisions with context — not dashboards you stare at, a mind that watches with you.</p></div>
-<div class="card"><span class="n">ACT</span><h3>Drones &amp; Robotics</h3><p>MAVLink drones and ROS2 robots take tasking from the same picture they feed. Close the loop: sense, decide, act.</p></div>
-<div class="card"><span class="n">MAP</span><h3>Sovereign Map Stack</h3><p>Self-hosted basemaps, orthomosaics, routing, and geofences. No Google. No Esri. No terms-of-service rug-pull.</p></div>
-</div>
-</div></section>
-
-<section id="loop"><div class="wrap">
-<div class="kicker">02 // Architecture</div>
-<h2>The loop that runs itself</h2>
-<p class="lead">Dashboards are table stakes. OneMind runs a closed loop — the difference between watching an operation and operating it.</p>
-<div class="loop">
-<div class="step"><b>SENSE</b><span>devices, sensors, humans</span></div>
-<div class="step"><b>FUSE</b><span>bus + memory + correlation</span></div>
-<div class="step"><b>DECIDE</b><span>AI agents with context</span></div>
-<div class="step"><b>ACT</b><span>drones, robots, alerts</span></div>
-</div>
-<div class="stats">
-<div class="stat"><b>10-yr</b><span>Event Memory</span></div>
-<div class="stat"><b>3-node</b><span>HA Message Bus</span></div>
-<div class="stat"><b>MIT/Apache</b><span>License Stack</span></div>
-<div class="stat"><b>100%</b><span>Self-Hostable</span></div>
-</div>
-</div></section>
-
-<section id="education"><div class="wrap">
-<div class="kicker">03 // Education</div>
-<h2>Learn to build it. Then run it.</h2>
-<p class="lead">The Sovereign Stack — our flagship program — walks you from zero to a running sovereign operations stack on your own hardware. Built in public, taught from production.</p>
-<table>
-<tr><th>Track</th><th>What you get</th><th>Format</th></tr>
-<tr><td>Community</td><td>Weekly builds, live missions, the build-in-public feed, direct access to the team</td><td>Live now — founding member pricing</td></tr>
-<tr><td>Sovereign Stack</td><td>4-week cohort: NATS bus, sensor pipeline, TAK map, AI agents. A running stack on your metal by day 28.</td><td>Cohort, live</td></tr>
-<tr><td>Consulting</td><td>Done-with-you architecture and deployment for your operation</td><td>1:1</td></tr>
-</table>
-<p style="margin-top:28px"><a class="cta" href="https://community.onemindos.com">Join the Community</a></p>
-</div></section>
-
-<section id="enterprise"><div class="wrap">
-<div class="kicker">04 // Enterprise</div>
-<h2>Deploy it on your operation</h2>
-<p class="lead">Farms, energy sites, construction, SAR, disaster response — anywhere humans and machines work across land. OneMind deploys on your infrastructure, air-gapped if you need it. Your data never leaves your metal unless you say so.</p>
-<p><a class="link" href="mailto:zeus@onemindos.com">zeus@onemindos.com</a> — tell us what you operate. We'll tell you what the loop looks like on it.</p>
-</div></section>
-
-<footer><div class="wrap">
-<div>© 2026 OneMind OS. Built in public.</div>
-<div><a class="link" href="https://github.com/onemindos">GitHub</a> · <a class="link" href="mailto:zeus@onemindos.com">zeus@onemindos.com</a></div>
-</div></footer>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OneMind OS — Sovereign Operations for the Physical World</title>
+    <meta name="description" content="OneMind OS is the open-source sovereign operations platform built on the TAK ecosystem: situational awareness fusing sensors, drones, robotics, and AI agents over NATS. Self-hosted for farms, SAR teams, and enterprise field operations." />
+    <meta property="og:title" content="OneMind OS — Sovereign Operations for the Physical World" />
+    <meta property="og:description" content="Open-source situational awareness: sensors, drones, robotics, and AI agents fused over NATS into one live picture. Your land, your crew, your machines. Your metal." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://onemindos.com" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

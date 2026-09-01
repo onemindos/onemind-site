@@ -1,24 +1,32 @@
-# onemind-site
+# React + TypeScript + Vite
 
-**onemindos.com** — the OneMind OS platform site.
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-Sovereign operations for the physical world: the open-source platform, plugin ecosystem, Sovereign Stack education, and enterprise solutions built on the TAK ecosystem.
+Currently, two official plugins are available:
 
-## Stack
-- Base: [ThreeUI](https://github.com/MengTo/threeui) (MIT) — dark, 3D, defense-tech aesthetic. Catalog routes stripped, real marketing pages composed from the shell + component families.
-- Build: Vite + React + TypeScript
-- Deploy: Cloudflare Pages (git push = deploy), custom domain `onemindos.com`
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## Site map (planned)
-- Landing: hero, problem, product planes (sense / fuse / decide / act), plugin map
-- Education: Sovereign Stack course + community at `community.onemindos.com` (Circle)
-- Enterprise: contact + live demo portal links (`onemindos.dev`)
-- Plugin docs microsites
+## React Compiler
 
-## Pipeline
-1. Legacy (AI agent) authors changes and pushes to `main`
-2. Cloudflare Pages auto-builds and deploys
-3. Zeus reviews preview URLs — zero code maintenance on the human side
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## License
-MIT. Bundled third-party assets (ThreeUI fonts, Three.js runtime) keep their upstream licenses (OFL / MIT).
+## Expanding the Oxlint configuration
+
+If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+
+```json
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "typescript", "oxc"],
+  "options": {
+    "typeAware": true
+  },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+  }
+}
+```
+
+See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
