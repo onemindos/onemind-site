@@ -1,143 +1,206 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { ChevronDown, X, Menu } from "lucide-react";
 
-const navSections = [
+type NavItem = { href: string; label: string; desc?: string };
+type NavSection = {
+  id: string;
+  label: string;
+  columns: { heading: string; items: NavItem[] }[];
+};
+
+const navSections: NavSection[] = [
   {
     id: "platform",
     label: "Platform",
-    items: [
-      { href: "/platform", label: "Overview", desc: "Full platform architecture" },
-      { href: "/platform#overwatch", label: "Overwatch", desc: "Real-time common operating picture" },
-      { href: "/platform#feeds", label: "TAK Feeds", desc: "Sensors, ADS-B, AIS, RF" },
-      { href: "/platform#agents", label: "AI Agents", desc: "12-agent mesh on NATS" },
-      { href: "/platform#video", label: "Tactical VMS", desc: "Drones, body cams, live video" },
-      { href: "/platform#geo", label: "Geo Stack", desc: "Full GIS — Tile38, Valhalla, TimescaleDB" },
-      { href: "/platform#deploy", label: "Deployment", desc: "Kubernetes, edge, or cloud" },
+    columns: [
+      {
+        heading: "Operations",
+        items: [
+          { href: "/platform#overwatch", label: "Overwatch", desc: "Real-time common operating picture" },
+          { href: "/platform#tak-feeds", label: "TAK Feeds", desc: "Sensor & data feeds to any TAK server" },
+          { href: "/platform#vms", label: "Tactical VMS", desc: "Multi-camera video management" },
+          { href: "/platform#geo-stack", label: "Geo Stack", desc: "Maps, routing, and spatial intelligence" },
+        ],
+      },
+      {
+        heading: "Infrastructure",
+        items: [
+          { href: "/nats", label: "NATS Bus", desc: "The fabric backbone" },
+          { href: "/platform#deployment", label: "Deployment", desc: "Self-hosted or cloud — your choice" },
+          { href: "/tools", label: "Tools", desc: "CLI, dashboards, dev utilities" },
+        ],
+      },
     ],
   },
   {
     id: "agents",
     label: "Agents",
-    items: [
-      { href: "/agents", label: "All 12 Agents", desc: "The full agent roster" },
-      { href: "/agents/legacy", label: "Legacy — The Mother", desc: "Sovereign cloud AI" },
-      { href: "/agents/legacy-edge", label: "Legacy-Edge", desc: "The Daughter — edge AI" },
-      { href: "/agents/oracle", label: "Oracle", desc: "Intelligence analyst" },
-      { href: "/agents/forge", label: "Forge", desc: "Master orchestration" },
-      { href: "/agents/guardian", label: "Guardian", desc: "Security" },
-      { href: "/agents/empire", label: "Empire", desc: "Business growth" },
-      { href: "/agents/haven", label: "Haven", desc: "Community" },
-      { href: "/agents/heritage", label: "Heritage", desc: "Brand + content" },
-      { href: "/agents/eden", label: "Eden", desc: "Creative + design" },
-      { href: "/agents/grid", label: "Grid", desc: "Infrastructure + sensors" },
-      { href: "/agents/spartan", label: "Spartan", desc: "Wellness" },
-      { href: "/agents/trinity", label: "Trinity", desc: "Integration + protocols" },
+    columns: [
+      {
+        heading: "Sovereign Agents",
+        items: [
+          { href: "/agents/legacy", label: "Legacy", desc: "Mother — cloud sovereign AI" },
+          { href: "/agents/oracle", label: "Oracle", desc: "Intelligence & recon" },
+          { href: "/agents/guardian", label: "Guardian", desc: "Security & perimeter" },
+          { href: "/agents/forge", label: "Forge", desc: "Master dev orchestrator" },
+          { href: "/agents/empire", label: "Empire", desc: "Business operations" },
+          { href: "/agents/haven", label: "Haven", desc: "Health & wellness" },
+        ],
+      },
+      {
+        heading: "Specialist Agents",
+        items: [
+          { href: "/agents/heritage", label: "Heritage", desc: "History & knowledge" },
+          { href: "/agents/grid", label: "Grid", desc: "Infrastructure & power" },
+          { href: "/agents/spartan", label: "Spartan", desc: "Physical training" },
+          { href: "/agents/trinity", label: "Trinity", desc: "Finance & resources" },
+          { href: "/agents/eden", label: "Eden", desc: "Homestead & agriculture" },
+          { href: "/agents", label: "All Agents →", desc: "" },
+        ],
+      },
     ],
   },
   {
     id: "plugins",
     label: "Plugins",
-    items: [
-      { href: "/plugins", label: "All Plugins", desc: "Plugin directory" },
-      { href: "/plugins/cloudtak", label: "CloudTAK", desc: "OneMind platform plugins" },
-      { href: "/plugins/atak", label: "ATAK", desc: "Android plugins" },
-      { href: "/plugins/tak-server", label: "TAK Server", desc: "Server-side plugins" },
-      { href: "/plugins/hermes", label: "Hermes", desc: "Skills + MCP plugins" },
+    columns: [
+      {
+        heading: "Platform Plugins",
+        items: [
+          { href: "/plugins#cloudtak", label: "CloudTAK Plugins", desc: "OneMind platform extensions" },
+          { href: "/plugins#atak", label: "ATAK Plugins", desc: "Android field device plugins" },
+          { href: "/plugins#tak-server", label: "TAK Server Plugins", desc: "Server-side extensions" },
+        ],
+      },
+      {
+        heading: "Developer",
+        items: [
+          { href: "/plugins#hermes", label: "Hermes Plugins", desc: "Skills & MCP servers" },
+          { href: "/plugins", label: "All Plugins →", desc: "" },
+        ],
+      },
     ],
   },
   {
-    id: "tools",
-    label: "Tools",
-    items: [
-      { href: "/tools", label: "All Tools", desc: "Fabric toolkit" },
+    id: "robotics",
+    label: "Robotics",
+    columns: [
+      {
+        heading: "Systems",
+        items: [
+          { href: "/robotics/drone-sentinel", label: "Sentinel Drone", desc: "Aerial ISR over the fabric" },
+          { href: "/robotics/ugv-rover", label: "Ground Rover", desc: "Autonomous perimeter patrol" },
+          { href: "/robotics/robot-gateway", label: "Robot Gateway", desc: "ROS 2 ↔ NATS bridge" },
+          { href: "/robotics/dimos", label: "DimOS", desc: "Sovereign robot OS" },
+        ],
+      },
+      {
+        heading: "Integration",
+        items: [
+          { href: "/robotics#tak-integration", label: "TAK Integration", desc: "How robots appear on TAK" },
+          { href: "/nats#robot-subjects", label: "NATS Subjects", desc: "fabric.robot.* subject map" },
+          { href: "/robotics", label: "All Systems →", desc: "" },
+        ],
+      },
     ],
   },
-  {
-    id: "more",
-    label: "More",
-    items: [
-      { href: "/nats", label: "NATS", desc: "The fabric bus — technical deep dive" },
-      { href: "/education", label: "Education", desc: "Sovereign Stack curriculum" },
-      { href: "/about", label: "About", desc: "Mission, thesis, founder" },
-      { href: "/contact", label: "Contact", desc: "Get in touch" },
-    ],
-  },
-] as const;
+];
+
+const simpleLinks = [
+  { href: "/education", label: "Education" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
 
 export default function Nav() {
   const [open, setOpen] = useState<string | null>(null);
-  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
 
+  /* scroll shadow */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    const fn = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
   }, []);
 
+  /* close on outside click */
+  useEffect(() => {
+    const fn = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setOpen(null);
+        setMobileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", fn);
+    return () => document.removeEventListener("mousedown", fn);
+  }, []);
+
+  /* close on route change */
+  useEffect(() => {
+    setOpen(null);
+    setMobileOpen(false);
+  }, []);
+
+  const toggle = (id: string) => setOpen((prev) => (prev === id ? null : id));
+
   return (
-    <header
+    <nav
+      ref={navRef}
       style={{
         position: "fixed",
         top: 0,
         left: 0,
         right: 0,
-        zIndex: 50,
-        transition: "background 0.3s, backdrop-filter 0.3s, border-color 0.3s",
-        background: scrolled ? "rgba(5, 6, 7, 0.95)" : "transparent",
-        backdropFilter: scrolled ? "blur(20px)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.05)" : "none",
+        zIndex: 1000,
+        background: scrolled ? "rgba(5,6,7,0.97)" : "rgba(5,6,7,0.85)",
+        backdropFilter: "blur(16px)",
+        borderBottom: scrolled ? "1px solid #1f1f1f" : "1px solid transparent",
+        transition: "background 0.3s, border-color 0.3s",
       }}
     >
-      <div
-        className="container-wide"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          height: "5rem",
-          paddingLeft: "clamp(1.5rem, 5vw, 6rem)",
-          paddingRight: "clamp(1.5rem, 5vw, 6rem)",
-        }}
-      >
+      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 1.5rem", display: "flex", alignItems: "center", height: "64px", gap: "0.25rem" }}>
         {/* Logo */}
-        <Link href="/" style={{ display: "flex", alignItems: "center", gap: "0.625rem", textDecoration: "none" }}>
-          <div style={{ width: 32, height: 32, background: "#8B0000", borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: "0.625rem", color: "white" }}>OM</div>
-          <span style={{ fontWeight: 900, fontSize: "1rem", letterSpacing: "-0.02em", color: "white" }}>
-            One<span style={{ color: "#b91c1c" }}>Mind</span> <span style={{ color: "#6b7280", fontWeight: 400, fontSize: "0.85rem" }}>OS</span>
+        <Link href="/" style={{ textDecoration: "none", marginRight: "2rem", flexShrink: 0 }} onClick={() => setOpen(null)}>
+          <span style={{ fontSize: "1rem", fontWeight: 800, color: "white", letterSpacing: "-0.02em" }}>
+            ONE<span style={{ color: "#b91c1c" }}>MIND</span>
           </span>
         </Link>
 
-        {/* Desktop nav */}
-        <nav style={{ display: "flex", gap: "1.5rem", alignItems: "center" }}>
+        {/* Desktop links */}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.125rem", flex: 1 }} className="nav-desktop">
           {navSections.map((section) => (
-            <div
-              key={section.id}
-              style={{ position: "relative" }}
-              onMouseEnter={() => setOpen(section.id)}
-              onMouseLeave={() => setOpen(null)}
-            >
+            <div key={section.id} style={{ position: "relative" }}>
               <button
+                onClick={() => toggle(section.id)}
                 style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
                   gap: "0.3rem",
-                  background: "none",
-                  border: "none",
-                  color: "#6b7280",
-                  fontSize: "0.9rem",
+                  padding: "0.5rem 0.75rem",
+                  borderRadius: "0.375rem",
+                  fontSize: "0.875rem",
                   fontWeight: 500,
-                  cursor: "pointer",
-                  padding: "0.5rem 0",
-                  transition: "color 0.2s",
+                  color: open === section.id ? "white" : "#9ca3af",
+                  backgroundColor: open === section.id ? "rgba(255,255,255,0.05)" : "transparent",
+                  transition: "color 0.15s, background 0.15s",
                 }}
-                onMouseEnter={(e) => ((e.target as HTMLElement).style.color = "white")}
-                onMouseLeave={(e) => ((e.target as HTMLElement).style.color = "#6b7280")}
+                aria-expanded={open === section.id}
               >
                 {section.label}
-                <ChevronDown size={14} style={{ transform: open === section.id ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s" }} />
+                <ChevronDown
+                  size={14}
+                  style={{
+                    transition: "transform 0.2s",
+                    transform: open === section.id ? "rotate(180deg)" : "rotate(0deg)",
+                  }}
+                />
               </button>
 
               {/* Dropdown */}
@@ -145,91 +208,125 @@ export default function Nav() {
                 <div
                   style={{
                     position: "absolute",
-                    top: "100%",
+                    top: "calc(100% + 8px)",
                     left: "50%",
                     transform: "translateX(-50%)",
-                    marginTop: "0.5rem",
-                    background: "#0a0c0e",
-                    border: "1px solid rgba(255,255,255,0.08)",
+                    background: "#0d0d0d",
+                    border: "1px solid #1f1f1f",
                     borderRadius: "0.75rem",
-                    padding: "0.75rem",
-                    minWidth: "260px",
-                    maxWidth: "420px",
-                    boxShadow: "0 20px 40px rgba(0,0,0,0.6)",
-                    zIndex: 100,
+                    padding: "1.25rem",
+                    minWidth: "480px",
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "0",
+                    boxShadow: "0 20px 60px rgba(0,0,0,0.6)",
+                    zIndex: 1001,
                   }}
                 >
-                  {section.items.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
+                  {section.columns.map((col, ci) => (
+                    <div
+                      key={col.heading}
                       style={{
-                        display: "block",
-                        padding: "0.625rem 0.75rem",
-                        borderRadius: "0.375rem",
-                        textDecoration: "none",
-                        transition: "background 0.15s",
+                        padding: "0 1rem",
+                        borderRight: ci === 0 ? "1px solid #1f1f1f" : "none",
                       }}
-                      onMouseEnter={(e) => ((e.target as HTMLElement).style.background = "rgba(255,255,255,0.04)")}
-                      onMouseLeave={(e) => ((e.target as HTMLElement).style.background = "none")}
                     >
-                      <div style={{ fontSize: "0.875rem", fontWeight: 600, color: "white", marginBottom: "0.1rem" }}>
-                        {item.label}
+                      <div style={{ fontSize: "0.65rem", fontWeight: 700, color: "#4b5563", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.75rem" }}>
+                        {col.heading}
                       </div>
-                      <div style={{ fontSize: "0.75rem", color: "#6b7280" }}>
-                        {item.desc}
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.125rem" }}>
+                        {col.items.map((item) => (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            onClick={() => setOpen(null)}
+                            style={{ textDecoration: "none", display: "block", padding: "0.5rem 0.5rem", borderRadius: "0.375rem" }}
+                            className="nav-dropdown-item"
+                          >
+                            <div style={{ fontSize: "0.83rem", fontWeight: 600, color: "#e5e7eb" }}>{item.label}</div>
+                            {item.desc && <div style={{ fontSize: "0.72rem", color: "#6b7280", marginTop: "0.125rem" }}>{item.desc}</div>}
+                          </Link>
+                        ))}
                       </div>
-                    </Link>
+                    </div>
                   ))}
                 </div>
               )}
             </div>
           ))}
 
-          <Link
-            href="https://community.onemindos.com"
-            target="_blank"
-            className="btn-primary"
-            style={{ padding: "0.625rem 1.25rem", fontSize: "0.85rem", marginLeft: "1rem" }}
-          >
-            Join Community
-          </Link>
-        </nav>
+          {/* Simple links */}
+          {simpleLinks.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              onClick={() => setOpen(null)}
+              style={{ fontSize: "0.875rem", fontWeight: 500, color: "#9ca3af", padding: "0.5rem 0.75rem", textDecoration: "none", borderRadius: "0.375rem" }}
+            >
+              {l.label}
+            </Link>
+          ))}
+        </div>
 
-        {/* Mobile toggle */}
+        {/* CTA */}
+        <Link href="/contact" className="btn-red" style={{ fontSize: "0.8rem", padding: "0.5rem 1.25rem", flexShrink: 0 }} onClick={() => setOpen(null)}>
+          Get Started
+        </Link>
+
+        {/* Mobile hamburger */}
         <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          style={{ background: "none", border: "none", color: "white", cursor: "pointer", padding: "0.5rem", display: "flex" }}
+          onClick={() => setMobileOpen((v) => !v)}
+          style={{ background: "none", border: "none", cursor: "pointer", color: "white", marginLeft: "0.75rem", padding: "0.25rem" }}
+          className="nav-mobile-toggle"
+          aria-label="Toggle menu"
         >
-          {mobileOpen ? "✕" : "☰"}
+          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile drawer */}
       {mobileOpen && (
-        <div style={{ padding: "1rem 1.5rem", background: "#0a0c0e", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+        <div style={{ background: "#0d0d0d", borderTop: "1px solid #1f1f1f", padding: "1rem 1.5rem 2rem", maxHeight: "80vh", overflowY: "auto" }}>
           {navSections.map((section) => (
-            <div key={section.id} style={{ marginBottom: "1rem" }}>
-              <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#6b7280", marginBottom: "0.5rem" }}>
+            <div key={section.id} style={{ marginBottom: "1.5rem" }}>
+              <div style={{ fontSize: "0.7rem", fontWeight: 700, color: "#4b5563", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: "0.625rem" }}>
                 {section.label}
               </div>
-              {section.items.map((item) => (
+              {section.columns.flatMap((col) => col.items).map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  style={{ display: "block", padding: "0.5rem 0", color: "#6b7280", textDecoration: "none", fontSize: "0.9rem" }}
+                  style={{ display: "block", padding: "0.5rem 0", fontSize: "0.9rem", color: "#d1d5db", textDecoration: "none", borderBottom: "1px solid #111" }}
                 >
                   {item.label}
                 </Link>
               ))}
             </div>
           ))}
-          <Link href="https://community.onemindos.com" target="_blank" className="btn-primary" style={{ marginTop: "0.5rem", justifyContent: "center" }}>
-            Join Community
-          </Link>
+          {simpleLinks.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              onClick={() => setMobileOpen(false)}
+              style={{ display: "block", padding: "0.5rem 0", fontSize: "0.9rem", color: "#d1d5db", textDecoration: "none", borderBottom: "1px solid #111" }}
+            >
+              {l.label}
+            </Link>
+          ))}
         </div>
       )}
-    </header>
+
+      <style>{`
+        .nav-desktop { display: flex !important; }
+        .nav-mobile-toggle { display: none !important; }
+        @media (max-width: 900px) {
+          .nav-desktop { display: none !important; }
+          .nav-mobile-toggle { display: block !important; }
+        }
+        .nav-dropdown-item:hover { background: rgba(255,255,255,0.04) !important; }
+        .nav-dropdown-item:hover div:first-child { color: white !important; }
+      `}</style>
+    </nav>
   );
 }
