@@ -2,7 +2,7 @@
 
 **Live:** https://onemindos.com  
 **Repo:** https://github.com/onemindos/onemind-site  
-**Branch:** `main` → auto-deploys to GitHub Pages on every push  
+**Branch:** `main` → auto-deploys to Droplet via self-hosted runner on every push  
 **Last major commit:** `880ba3d` — click-toggle nav, robotics lane, 39 routes
 
 ---
@@ -20,7 +20,7 @@ The public-facing product and platform directory for **OneMind OS** — a sovere
 | Layer | Technology |
 |---|---|
 | Framework | Next.js 16.3.4 (App Router) |
-| Output | Static export (`output: "export"`) — GitHub Pages compatible |
+| Output | Standalone Node.js server (`output: "standalone"`) — Docker/Droplet |
 | 3D Graphics | React Three Fiber + Three.js 0.185 |
 | Animation | Framer Motion 13 + GSAP 3 |
 | Styling | Tailwind CSS v4 (`@import "tailwindcss"` syntax — NOT v3) |
@@ -177,14 +177,13 @@ Operations | Infrastructure   Sovereign | Specialist       Platform | Developer 
 ```
 git push origin main
   → GitHub Actions (.github/workflows/deploy.yml)
-  → npm ci && npm run build
-  → next build → out/ (static HTML)
-  → CNAME file written: onemindos.com
-  → Deployed to GitHub Pages
+  → self-hosted runner on onemind-web Droplet (138.197.0.156)
+  → docker compose up -d --build
+  → health check passes
   → Live at https://onemindos.com (~2 min total)
 ```
 
-**No environment variables required** — fully static, no server, no API keys in the build.
+**No environment variables required** — no API keys in the build.
 
 ---
 
@@ -198,24 +197,24 @@ npm run dev
 # → http://localhost:3000
 ```
 
-Build and preview the static export:
+Build and preview:
 ```bash
 npm run build
-npx serve out/
+npx serve .next/standalone
 ```
 
 ---
 
 ## DNS & hosting
 
-| Record | Type | Value |
-|---|---|---|
-| `onemindos.com` | CNAME | `onemindos.github.io` |
-| `www.onemindos.com` | CNAME | `onemindos.github.io` |
+| Record | Type | Value | Proxied |
+|---|---|---|---|
+| `onemindos.com` | A | `138.197.0.156` | Yes (orange cloud) |
+| `www.onemindos.com` | A | `138.197.0.156` | Yes (orange cloud) |
 
-DNS managed in Cloudflare (zone `16e6fe93195adf6b768070857940115e`), grey-cloud (DNS only, not proxied). TLS cert issued by GitHub/Let's Encrypt — `CN=onemindos.com`. Do NOT proxy through Cloudflare (orange cloud) without switching the GitHub Pages source to use Cloudflare Pages instead.
+DNS managed in Cloudflare (zone `16e6fe93195adf6b768070857940115a`), orange-cloud (proxied). Cloudflare handles SSL (Flexible mode) — origin serves HTTP on port 80, Cloudflare terminates HTTPS for users.
 
-**Do not touch:** `CNAME` file in repo root and `public/CNAME` — both must contain `onemindos.com` for GitHub Pages to serve the custom domain.
+**Hosting:** DigitalOcean Droplet `onemind-web` (138.197.0.156, nyc3, 4GB/2vCPU, $24/mo). Nginx reverse proxy → Docker container on port 3000.
 
 ---
 
@@ -249,7 +248,7 @@ All placeholder slots (hero video, founder photo, drone footage, etc.) are docum
 ## What this site is NOT
 
 - Not a WordPress site — there is no CMS, no admin panel, no database
-- Not deployed on Vercel — it is GitHub Pages static export
+- Not deployed on Vercel or GitHub Pages — it runs on a DigitalOcean Droplet
 - Not using Tailwind v3 — do not use `@apply` or `@layer components`
 - Not using Mapbox GL — MapLibre only (BSD license) for any map components added in future
 - Not server-side rendered — `output: "export"` means pure static HTML, no API routes
